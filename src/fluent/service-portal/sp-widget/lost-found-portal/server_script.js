@@ -1,5 +1,5 @@
 (function() {
-    data.appName = "Ramachandra College of Engineering";
+    data.appName = "Campus Property Administration";
     data.appTitle = "Lost & Found Campus Portal";
     data.userId = gs.getUserID();
     data.userName = gs.getUserDisplayName();
@@ -97,7 +97,7 @@
             brand: grF.getValue('brand') || '',
             colour: grF.getValue('colour') || '',
             description: grF.getValue('description') || '',
-            found_location: grF.getDisplayValue('found_location') || 'RCE Campus',
+            found_location: grF.getDisplayValue('found_location') || 'Campus',
             found_date: grF.getDisplayValue('found_date') || '',
             storage_location: grF.getValue('storage_location') || '',
             state: grF.getDisplayValue('state'),
@@ -121,7 +121,7 @@
             brand: grL.getValue('brand') || '',
             colour: grL.getValue('colour') || '',
             description: grL.getValue('description') || '',
-            last_seen_location: grL.getDisplayValue('last_seen_location') || 'RCE Campus',
+            last_seen_location: grL.getDisplayValue('last_seen_location') || 'Campus',
             last_seen_date: grL.getDisplayValue('last_seen_date') || '',
             state: grL.getDisplayValue('state'),
             state_val: grL.getValue('state'),

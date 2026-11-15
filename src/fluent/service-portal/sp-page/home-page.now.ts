@@ -4,7 +4,7 @@ import { lostFoundMainWidget } from '../sp-widget/lost-found-portal/widget.now'
 
 export const lostFoundHomePage = SPPage({
     pageId: 'x_1526023_lost_and_portal_home',
-    title: 'Lost and Found - Ramachandra College of Engineering',
+    title: 'Lost and Found',
     category: 'custom',
     public: false,
     draft: false,

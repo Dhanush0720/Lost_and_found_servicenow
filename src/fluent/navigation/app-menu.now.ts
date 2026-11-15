@@ -5,7 +5,7 @@ import { ApplicationMenu, Record } from '@servicenow/sdk/core'
 const lostAndFoundMenu = ApplicationMenu({
     $id: Now.ID['lost_and_found_menu'],
     title: 'Lost and Found',
-    hint: 'Lost and Found management for Ramachandra College of Engineering',
+    hint: 'Lost and Found property management',
     description: 'Report lost items, log found items, manage matches and claims',
     active: true,
 })
@@ -108,7 +108,7 @@ Record({
         title: 'Lost & Found Portal',
         application: lostAndFoundMenu,
         link_type: 'DIRECT',
-        query: 'rce_lost_found',
+        query: 'lost_found',
         hint: 'Open modern self-service portal for students and staff',
         active: true,
         order: 50,
