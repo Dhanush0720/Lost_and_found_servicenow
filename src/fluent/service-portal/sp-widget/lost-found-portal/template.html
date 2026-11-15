@@ -1,0 +1,385 @@
+<div class="unslop-portal">
+  <!-- Top Header / Masthead -->
+  <header class="portal-masthead">
+    <div class="masthead-main">
+      <div class="masthead-brand">
+        <span class="institution-name">Ramachandra College of Engineering</span>
+        <h1 class="portal-title">Lost &amp; Found Registry</h1>
+        <p class="portal-description">
+          Campus property registry for reporting lost items, logging found belongings into desk custody, and matching ownership claims.
+        </p>
+      </div>
+      <div class="masthead-actions">
+        <button class="btn btn-primary action-btn" ng-click="c.reportMode='lost'; c.setTab('report')">
+          Report lost property
+        </button>
+        <button class="btn btn-secondary action-btn" ng-click="c.reportMode='found'; c.setTab('report')">
+          Log found item
+        </button>
+      </div>
+    </div>
+
+    <!-- Ledger Metrics Bar -->
+    <div class="metrics-bar">
+      <div class="metric-item" ng-click="c.setTab('found')">
+        <span class="metric-value">{{c.data.stats.storedFound}}</span>
+        <span class="metric-label">Items in custody</span>
+      </div>
+      <div class="metric-divider"></div>
+      <div class="metric-item" ng-click="c.setTab('lost')">
+        <span class="metric-value">{{c.data.stats.openLost}}</span>
+        <span class="metric-label">Active lost reports</span>
+      </div>
+      <div class="metric-divider"></div>
+      <div class="metric-item" ng-click="c.setTab('matches')">
+        <span class="metric-value">{{c.data.stats.matches}}</span>
+        <span class="metric-label">Suggested matches</span>
+      </div>
+      <div class="metric-divider"></div>
+      <div class="metric-item" ng-click="c.setTab('claims')">
+        <span class="metric-value">{{c.data.stats.claims}}</span>
+        <span class="metric-label">Ownership claims</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Bar -->
+  <nav class="portal-nav">
+    <div class="nav-tabs-wrapper">
+      <button class="nav-tab-btn" ng-class="{'is-active': c.activeTab == 'found'}" ng-click="c.setTab('found')">
+        Found custody
+        <span class="tab-count">{{c.data.foundItems.length}}</span>
+      </button>
+      <button class="nav-tab-btn" ng-class="{'is-active': c.activeTab == 'lost'}" ng-click="c.setTab('lost')">
+        Lost reports
+        <span class="tab-count">{{c.data.lostItems.length}}</span>
+      </button>
+      <button class="nav-tab-btn" ng-class="{'is-active': c.activeTab == 'matches'}" ng-click="c.setTab('matches')">
+        Match suggestions
+        <span class="tab-count match-count">{{c.data.matches.length}}</span>
+      </button>
+      <button class="nav-tab-btn" ng-class="{'is-active': c.activeTab == 'report'}" ng-click="c.setTab('report')">
+        Submit record
+      </button>
+      <button class="nav-tab-btn" ng-class="{'is-active': c.activeTab == 'claims'}" ng-click="c.setTab('claims')">
+        Claims
+        <span class="tab-count">{{c.data.myClaims.length}}</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Filter & Search Bar -->
+  <div class="filter-strip" ng-if="c.activeTab == 'found' || c.activeTab == 'lost'">
+    <div class="search-box">
+      <i class="fa fa-search search-icon"></i>
+      <input type="text" class="search-input" placeholder="Search by title, brand, colour, or location" ng-model="c.searchQuery">
+      <button class="search-clear" type="button" ng-if="c.searchQuery" ng-click="c.searchQuery=''">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+    <div class="category-filters">
+      <button class="category-btn" ng-class="{'is-selected': c.selectedCategory == ''}" ng-click="c.setCategory('')">All</button>
+      <button class="category-btn" ng-repeat="cat in c.categories track by cat.value" ng-if="cat.value" ng-class="{'is-selected': c.selectedCategory == cat.value}" ng-click="c.setCategory(cat.value)">
+        {{cat.label}}
+      </button>
+    </div>
+  </div>
+
+  <!-- TAB 1: FOUND INVENTORY -->
+  <section class="tab-panel" ng-if="c.activeTab == 'found'">
+    <div class="items-grid">
+      <article class="item-ledger-card" ng-repeat="item in c.data.foundItems | filter:c.filterItems track by item.sys_id">
+        <div class="card-meta-row">
+          <span class="record-id">{{item.number}}</span>
+          <span class="status-indicator state-{{item.state_val}}">{{item.state}}</span>
+        </div>
+        <h2 class="card-title">{{item.item_title}}</h2>
+        <div class="attributes-row">
+          <span class="attr-pill">{{item.category}}</span>
+          <span class="attr-pill" ng-if="item.brand">{{item.brand}}</span>
+          <span class="attr-pill" ng-if="item.colour">{{item.colour}}</span>
+        </div>
+        <p class="card-description" ng-if="item.description">{{item.description}}</p>
+        <dl class="card-meta-list">
+          <div class="meta-entry">
+            <dt>Location</dt>
+            <dd>{{item.found_location}}</dd>
+          </div>
+          <div class="meta-entry" ng-if="item.storage_location">
+            <dt>Custody</dt>
+            <dd>{{item.storage_location}}</dd>
+          </div>
+          <div class="meta-entry" ng-if="item.found_date">
+            <dt>Found date</dt>
+            <dd>{{item.found_date}}</dd>
+          </div>
+        </dl>
+        <div class="card-footer-action">
+          <button class="btn btn-outline btn-block" ng-if="item.state_val == 'stored'" ng-click="c.openClaimModal(item)">
+            Claim ownership
+          </button>
+          <span class="state-notice" ng-if="item.state_val != 'stored'">
+            Archived ({{item.state}})
+          </span>
+        </div>
+      </article>
+    </div>
+    <div class="empty-state" ng-if="(c.data.foundItems | filter:c.filterItems).length == 0">
+      <p class="empty-title">No found items match the filter criteria</p>
+      <p class="empty-subtitle">Try adjusting your search terms or category selection.</p>
+    </div>
+  </section>
+
+  <!-- TAB 2: LOST REPORTS -->
+  <section class="tab-panel" ng-if="c.activeTab == 'lost'">
+    <div class="items-grid">
+      <article class="item-ledger-card" ng-repeat="item in c.data.lostItems | filter:c.filterItems track by item.sys_id">
+        <div class="card-meta-row">
+          <span class="record-id">{{item.number}}</span>
+          <span class="status-indicator state-{{item.state_val}}">{{item.state}}</span>
+        </div>
+        <h2 class="card-title">{{item.item_title}}</h2>
+        <div class="attributes-row">
+          <span class="attr-pill">{{item.category}}</span>
+          <span class="attr-pill" ng-if="item.brand">{{item.brand}}</span>
+          <span class="attr-pill" ng-if="item.colour">{{item.colour}}</span>
+        </div>
+        <p class="card-description" ng-if="item.description">{{item.description}}</p>
+        <dl class="card-meta-list">
+          <div class="meta-entry">
+            <dt>Last seen</dt>
+            <dd>{{item.last_seen_location}}</dd>
+          </div>
+          <div class="meta-entry" ng-if="item.last_seen_date">
+            <dt>Reported date</dt>
+            <dd>{{item.last_seen_date}}</dd>
+          </div>
+          <div class="meta-entry" ng-if="item.reporter">
+            <dt>Reporter</dt>
+            <dd>{{item.reporter}}</dd>
+          </div>
+        </dl>
+      </article>
+    </div>
+    <div class="empty-state" ng-if="(c.data.lostItems | filter:c.filterItems).length == 0">
+      <p class="empty-title">No lost items match the filter criteria</p>
+      <p class="empty-subtitle">Try adjusting your search terms or category selection.</p>
+    </div>
+  </section>
+
+  <!-- TAB 3: MATCH SUGGESTIONS -->
+  <section class="tab-panel" ng-if="c.activeTab == 'matches'">
+    <div class="guidance-callout">
+      <span class="callout-label">Scoring criteria</span>
+      Matches score across description (30), category (20), brand (15), colour (15), location (10), and date (10). High confidence matches notify the reporter.
+    </div>
+
+    <div class="matches-list">
+      <article class="match-ledger-row" ng-repeat="m in c.data.matches track by m.sys_id">
+        <div class="match-score-column">
+          <div class="score-figure band-{{m.band}}">{{m.confidence_score}}%</div>
+          <div class="band-tag band-{{m.band}}">{{m.band}}</div>
+        </div>
+
+        <div class="match-comparison-column">
+          <div class="comparison-pair">
+            <div class="pair-side">
+              <span class="pair-type">Lost report</span>
+              <span class="pair-name">{{m.lost_item_title}}</span>
+            </div>
+            <div class="pair-arrow">
+              <i class="fa fa-arrow-right"></i>
+            </div>
+            <div class="pair-side">
+              <span class="pair-type">Found custody</span>
+              <span class="pair-name">{{m.found_item_title}}</span>
+            </div>
+          </div>
+
+          <div class="breakdown-chips">
+            <span class="chip" ng-if="m.breakdown.category">Category +{{m.breakdown.category}}</span>
+            <span class="chip" ng-if="m.breakdown.brand">Brand +{{m.breakdown.brand}}</span>
+            <span class="chip" ng-if="m.breakdown.colour">Colour +{{m.breakdown.colour}}</span>
+            <span class="chip" ng-if="m.breakdown.location">Location +{{m.breakdown.location}}</span>
+            <span class="chip" ng-if="m.breakdown.date">Date +{{m.breakdown.date}}</span>
+            <span class="chip" ng-if="m.breakdown.description">Description +{{m.breakdown.description}}</span>
+          </div>
+        </div>
+
+        <div class="match-actions-column">
+          <span class="status-indicator status-{{m.status}}">{{m.status_dv}}</span>
+          <div class="button-group" ng-if="m.status == 'suggested'">
+            <button class="btn btn-sm btn-primary" ng-click="c.updateMatch(m, 'accepted')">Accept</button>
+            <button class="btn btn-sm btn-secondary" ng-click="c.updateMatch(m, 'rejected')">Reject</button>
+            <button class="btn btn-sm btn-outline" ng-click="c.claimData.lost_item_id=m.lost_item_id; c.claimData.found_item_id=m.found_item_id; c.claimData.found_item_title=m.found_item_title; c.claimModalOpen=true">Claim</button>
+          </div>
+        </div>
+      </article>
+    </div>
+    <div class="empty-state" ng-if="c.data.matches.length == 0">
+      <p class="empty-title">No pending match suggestions</p>
+      <p class="empty-subtitle">New potential matches are evaluated automatically upon record submission.</p>
+    </div>
+  </section>
+
+  <!-- TAB 4: SUBMIT RECORD -->
+  <section class="tab-panel" ng-if="c.activeTab == 'report'">
+    <div class="form-container">
+      <div class="form-mode-switch">
+        <button class="mode-tab" ng-class="{'is-active': c.reportMode == 'lost'}" ng-click="c.reportMode = 'lost'">
+          Report lost property
+        </button>
+        <button class="mode-tab" ng-class="{'is-active': c.reportMode == 'found'}" ng-click="c.reportMode = 'found'">
+          Log found property into custody
+        </button>
+      </div>
+
+      <header class="form-header">
+        <h2 class="form-title">
+          {{c.reportMode == 'lost' ? 'Lost item report' : 'Custody intake form'}}
+        </h2>
+        <p class="form-subtitle">
+          {{c.reportMode == 'lost' ? 'Provide item details to cross-reference against campus custody records.' : 'Record recovered property and assign an initial storage locker.'}}
+        </p>
+      </header>
+
+      <form class="ledger-form" ng-submit="c.submitReport()">
+        <div class="form-field">
+          <label class="field-label">Item title <span class="required-mark">*</span></label>
+          <input type="text" class="field-input" placeholder="e.g., Black HP Pavilion 15-inch laptop" ng-model="c.newReport.item_title" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field col-half">
+            <label class="field-label">Category <span class="required-mark">*</span></label>
+            <select class="field-select" ng-model="c.newReport.category" required>
+              <option value="id_card">ID Card</option>
+              <option value="laptop">Laptop</option>
+              <option value="wallet">Wallet</option>
+              <option value="phone">Phone</option>
+              <option value="keys">Keys</option>
+              <option value="book">Book</option>
+              <option value="bag">Bag</option>
+              <option value="accessory">Accessory</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-field col-half">
+            <label class="field-label">Campus location</label>
+            <select class="field-select" ng-model="c.newReport.location">
+              <option value="">Select location</option>
+              <option ng-repeat="loc in c.data.locations track by loc.sys_id" value="{{loc.sys_id}}">
+                {{loc.name}} ({{loc.campus_zone}})
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field col-half">
+            <label class="field-label">Brand</label>
+            <input type="text" class="field-input" placeholder="e.g., HP, boAt, Dell, Titan" ng-model="c.newReport.brand">
+          </div>
+          <div class="form-field col-half">
+            <label class="field-label">Colour</label>
+            <input type="text" class="field-input" placeholder="e.g., Black, Navy blue, Brown" ng-model="c.newReport.colour">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field col-half">
+            <label class="field-label">{{c.reportMode == 'lost' ? 'Last seen timestamp' : 'Found timestamp'}}</label>
+            <input type="datetime-local" class="field-input" ng-model="c.newReport.date">
+          </div>
+          <div class="form-field col-half" ng-if="c.reportMode == 'found'">
+            <label class="field-label">Storage location</label>
+            <input type="text" class="field-input" placeholder="e.g., Desk Locker A-1" ng-model="c.newReport.storage_location">
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Distinctive marks and description</label>
+          <textarea class="field-textarea" rows="3" placeholder="Engravings, stickers, damage, serial markings, or contents" ng-model="c.newReport.description"></textarea>
+        </div>
+
+        <div class="form-submit-row">
+          <button type="submit" class="btn btn-primary" ng-disabled="c.loading">
+            <span ng-if="!c.loading">Submit {{c.reportMode == 'lost' ? 'report' : 'custody entry'}}</span>
+            <span ng-if="c.loading">Submitting...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- TAB 5: CLAIMS TABLE -->
+  <section class="tab-panel" ng-if="c.activeTab == 'claims'">
+    <div class="table-container">
+      <table class="ledger-table">
+        <thead>
+          <tr>
+            <th>Claim ID</th>
+            <th>Lost report</th>
+            <th>Found custody item</th>
+            <th>Claimant</th>
+            <th>Status</th>
+            <th>Proof of ownership</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="claim in c.data.myClaims track by claim.sys_id">
+            <td class="tabular-id">{{claim.number || 'CLM-PENDING'}}</td>
+            <td>{{claim.lost_item_title}}</td>
+            <td>{{claim.found_item_title}}</td>
+            <td>{{claim.claimant}}</td>
+            <td>
+              <span class="status-indicator state-{{claim.verification_state_val}}">
+                {{claim.verification_state}}
+              </span>
+            </td>
+            <td class="proof-cell">{{claim.proof}}</td>
+          </tr>
+          <tr ng-if="c.data.myClaims.length == 0">
+            <td colspan="6" class="empty-table-cell">
+              No ownership claims filed. To claim a found item, select "Claim ownership" on the custody list.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- OWNERSHIP CLAIM MODAL -->
+  <div class="modal-backdrop" ng-if="c.claimModalOpen">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Verify item ownership</h3>
+        <button type="button" class="modal-close" ng-click="c.closeClaimModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-notice">
+          Claiming property: <b>{{c.claimData.found_item_title}}</b>
+        </div>
+        <div class="form-field">
+          <label class="field-label">Associated lost item report <span class="required-mark">*</span></label>
+          <select class="field-select" ng-model="c.claimData.lost_item_id" required>
+            <option value="">Select your filed report</option>
+            <option ng-repeat="l in c.data.lostItems track by l.sys_id" value="{{l.sys_id}}">
+              {{l.number}} · {{l.item_title}} ({{l.category}})
+            </option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="field-label">Proof of ownership <span class="required-mark">*</span></label>
+          <textarea class="field-textarea" rows="4" placeholder="State specific verifying information such as serial numbers, lockscreen image, receipts, or contents known only to the owner" ng-model="c.claimData.proof_of_ownership" required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" ng-click="c.closeClaimModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click="c.submitClaim()" ng-disabled="c.loading">
+          Submit claim
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
