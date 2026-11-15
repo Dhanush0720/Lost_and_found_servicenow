@@ -800,3 +800,407 @@
   color: #64748b;
   margin: 0;
 }
+
+
+/* -------------------------------------------------------------------------- */
+/* EMPATHY HERO BANNER                                                        */
+/* -------------------------------------------------------------------------- */
+.empathy-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #1e3a8a;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-top: 18px;
+  gap: 20px;
+}
+
+.empathy-hero-body {
+  flex: 1;
+}
+
+.empathy-hero-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #1e3a8a;
+  margin-bottom: 4px;
+}
+
+.empathy-hero-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+}
+
+.empathy-hero-desc {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.empathy-hero-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-dark {
+  background: #0f172a;
+  color: #ffffff;
+  border: 1px solid #0f172a;
+  border-radius: 6px;
+  font-weight: 500;
+  padding: 6px 12px;
+}
+
+.btn-dark:hover {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+.btn-outline-dark {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-weight: 500;
+  padding: 6px 12px;
+}
+
+.btn-outline-dark:hover {
+  background: #f1f5f9;
+}
+
+.btn-whatsapp {
+  background: #15803d;
+  color: #ffffff;
+  border: 1px solid #15803d;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.btn-whatsapp:hover {
+  background: #166534;
+  color: #ffffff;
+}
+
+/* Featured Tab */
+.nav-tab-btn.featured-tab {
+  color: #1e3a8a;
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 3-CLICK QUICK HAND-IN PANEL                                                */
+/* -------------------------------------------------------------------------- */
+.quick-handin-panel {
+  display: flex;
+  justify-content: center;
+}
+
+.quick-handin-card {
+  width: 100%;
+  max-width: 760px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 28px 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.quick-header {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.quick-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+}
+
+.quick-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.quick-step-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  align-items: flex-start;
+}
+
+.step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #1e3a8a;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 10px;
+}
+
+/* Photo Dropzone */
+.photo-dropzone {
+  border: 2px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  background: #fafafa;
+  transition: all 0.15s ease;
+}
+
+.photo-dropzone:hover {
+  border-color: #1e3a8a;
+  background: #f8fafc;
+}
+
+.photo-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #64748b;
+}
+
+.photo-icon {
+  font-size: 26px;
+  color: #1e3a8a;
+}
+
+.photo-text {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.photo-preview-box {
+  position: relative;
+  display: inline-block;
+}
+
+.photo-img {
+  max-height: 180px;
+  max-width: 100%;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.photo-retake-badge {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #1e3a8a;
+  font-weight: 500;
+}
+
+/* Quick Category Grid */
+.quick-category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 10px;
+}
+
+.quick-cat-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.quick-cat-btn:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+
+.quick-cat-btn.is-active {
+  border-color: #1e3a8a;
+  background: #eff6ff;
+  box-shadow: 0 0 0 1px #1e3a8a;
+}
+
+.cat-chip-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background: #e2e8f0;
+  color: #334155;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.quick-cat-btn.is-active .cat-chip-tag {
+  background: #1e3a8a;
+  color: #ffffff;
+}
+
+.cat-chip-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.cat-chip-desc {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* Quick Drop Desk Grid */
+.quick-desk-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.quick-desk-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.quick-desk-btn:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.quick-desk-btn.is-active {
+  background: #1e3a8a;
+  color: #ffffff;
+  border-color: #1e3a8a;
+}
+
+.quick-note-field {
+  margin-top: 10px;
+}
+
+/* Quick Action Bar */
+.quick-action-bar {
+  display: flex;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+  margin-top: 16px;
+}
+
+.btn-lg {
+  padding: 10px 18px;
+  font-size: 14px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* EMPATHY NOTICE ON ITEM CARDS                                               */
+/* -------------------------------------------------------------------------- */
+.empathy-card-notice {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  border-radius: 4px;
+  padding: 6px 10px;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #92400e;
+}
+
+.empathy-card-notice i {
+  color: #b45309;
+}
+
+/* -------------------------------------------------------------------------- */
+/* FOOTER WHATSAPP SUPPORT STRIP                                              */
+/* -------------------------------------------------------------------------- */
+.portal-support-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-top: 32px;
+  gap: 16px;
+}
+
+.support-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.support-heading {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.support-desc {
+  font-size: 13px;
+  color: #64748b;
+}
+
+@media (max-width: 768px) {
+  .empathy-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .quick-handin-card {
+    padding: 16px;
+  }
+  .quick-step-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .quick-action-bar {
+    flex-direction: column;
+  }
+  .portal-support-strip {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

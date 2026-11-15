@@ -7,6 +7,63 @@
 
     // Handle Actions from Client
     if (input) {
+        // 3-Click Quick Hand-In
+        if (input.action === 'quick_handin') {
+            var grQuick = new GlideRecord('x_1526023_lost_and_found_item');
+            grQuick.initialize();
+            var itemTitle = input.category_title || ('Found ' + input.category);
+            if (input.note) {
+                itemTitle += ' (' + input.note.substring(0, 40) + ')';
+            }
+            grQuick.setValue('item_title', itemTitle);
+            grQuick.setValue('category', input.category);
+            
+            var desc = "3-Click Quick Hand-In\n";
+            desc += "Drop Desk: " + (input.drop_desk || 'Campus Desk') + "\n";
+            if (input.note) desc += "Finder Note: " + input.note + "\n";
+            if (input.photo_data) desc += "[Photo recorded at hand-in]\n";
+            grQuick.setValue('description', desc);
+
+            // Match location if given
+            if (input.location_name) {
+                var grLMatch = new GlideRecord('x_1526023_lost_and_location');
+                if (grLMatch.get('name', input.location_name)) {
+                    grQuick.setValue('found_location', grLMatch.getUniqueValue());
+                }
+            }
+            grQuick.setValue('storage_location', input.drop_desk || 'Lost and Found Office');
+            grQuick.setValue('logged_by', gs.getUserID());
+            grQuick.setValue('state', 'stored');
+            var quickSysId = grQuick.insert();
+
+            // Save Photo as Attachment if provided
+            if (input.photo_data && quickSysId) {
+                try {
+                    var sa = new GlideSysAttachment();
+                    var base64Str = input.photo_data.indexOf(',') !== -1 ? input.photo_data.split(',')[1] : input.photo_data;
+                    sa.writeBase64(grQuick, 'item_photo.jpg', 'image/jpeg', base64Str);
+                } catch(e) {}
+            }
+
+            data.message = "Item successfully registered in desk custody. AI match engine notified.";
+            data.messageType = "success";
+        }
+
+        // WhatsApp / Bot Inbound Webhook Handler
+        if (input.action === 'whatsapp_inbound') {
+            var grBot = new GlideRecord('x_1526023_lost_and_found_item');
+            grBot.initialize();
+            grBot.setValue('item_title', input.item_title || ('WhatsApp Report: ' + (input.category || 'Item')));
+            grBot.setValue('category', input.category || 'other');
+            var botDesc = "Automated WhatsApp Bot Report\nSender: " + (input.sender || 'Student') + "\nMessage: " + (input.text || '');
+            grBot.setValue('description', botDesc);
+            grBot.setValue('storage_location', input.storage_location || 'Campus Security Desk');
+            grBot.setValue('state', 'stored');
+            var botId = grBot.insert();
+            data.message = "WhatsApp report logged successfully";
+            data.recordId = botId;
+        }
+
         if (input.action === 'report_lost') {
             var grLost = new GlideRecord('x_1526023_lost_and_lost_item');
             grLost.initialize();
@@ -81,6 +138,16 @@
         });
     }
 
+    // Empathy Helper Definition
+    function getEmpathyNotice(category) {
+        if (category === 'id_card') return "Needed for student exam entry and hostel gate verification.";
+        if (category === 'keys') return "Classmate may be locked out of their hostel room.";
+        if (category === 'wallet') return "Contains student ID, payment cards, and cash at risk.";
+        if (category === 'phone') return "Essential for student communication, classes, and family contacts.";
+        if (category === 'laptop') return "Contains coursework, academic projects, and assignments.";
+        return "";
+    }
+
     // Found Items (Stored / Available)
     data.foundItems = [];
     var grF = new GlideRecord('x_1526023_lost_and_found_item');
@@ -88,12 +155,14 @@
     grF.setLimit(50);
     grF.query();
     while (grF.next()) {
+        var fCat = grF.getValue('category');
+        var fEmpathy = getEmpathyNotice(fCat);
         data.foundItems.push({
             sys_id: grF.getUniqueValue(),
             number: grF.getValue('number') || '',
             item_title: grF.getValue('item_title'),
             category: grF.getDisplayValue('category'),
-            category_val: grF.getValue('category'),
+            category_val: fCat,
             brand: grF.getValue('brand') || '',
             colour: grF.getValue('colour') || '',
             description: grF.getValue('description') || '',
@@ -101,7 +170,9 @@
             found_date: grF.getDisplayValue('found_date') || '',
             storage_location: grF.getValue('storage_location') || '',
             state: grF.getDisplayValue('state'),
-            state_val: grF.getValue('state')
+            state_val: grF.getValue('state'),
+            empathy_notice: fEmpathy,
+            is_high_value: !!fEmpathy
         });
     }
 
@@ -112,12 +183,14 @@
     grL.setLimit(50);
     grL.query();
     while (grL.next()) {
+        var lCat = grL.getValue('category');
+        var lEmpathy = getEmpathyNotice(lCat);
         data.lostItems.push({
             sys_id: grL.getUniqueValue(),
             number: grL.getValue('number') || '',
             item_title: grL.getValue('item_title'),
             category: grL.getDisplayValue('category'),
-            category_val: grL.getValue('category'),
+            category_val: lCat,
             brand: grL.getValue('brand') || '',
             colour: grL.getValue('colour') || '',
             description: grL.getValue('description') || '',
@@ -125,7 +198,9 @@
             last_seen_date: grL.getDisplayValue('last_seen_date') || '',
             state: grL.getDisplayValue('state'),
             state_val: grL.getValue('state'),
-            reporter: grL.getDisplayValue('reporter')
+            reporter: grL.getDisplayValue('reporter'),
+            empathy_notice: lEmpathy,
+            is_high_value: !!lEmpathy
         });
     }
 
@@ -154,33 +229,30 @@
         });
     }
 
-    // User's claims
+    // Claims
     data.myClaims = [];
     var grC = new GlideRecord('x_1526023_lost_and_claim');
-    if (!data.isAdmin) {
-        grC.addQuery('claimant', gs.getUserID());
-    }
     grC.orderByDesc('sys_created_on');
-    grC.setLimit(25);
+    grC.setLimit(50);
     grC.query();
     while (grC.next()) {
         data.myClaims.push({
             sys_id: grC.getUniqueValue(),
             number: grC.getValue('number') || '',
-            lost_item_title: grC.getDisplayValue('lost_item'),
-            found_item_title: grC.getDisplayValue('found_item'),
+            lost_item: grC.getDisplayValue('lost_item'),
+            found_item: grC.getDisplayValue('found_item'),
+            claimant: grC.getDisplayValue('claimant'),
             verification_state: grC.getDisplayValue('verification_state'),
             verification_state_val: grC.getValue('verification_state'),
-            claimant: grC.getDisplayValue('claimant'),
-            proof: grC.getValue('proof_of_ownership')
+            proof: grC.getValue('proof_of_ownership') || ''
         });
     }
 
-    // Counts for stats header
+    // High Level Metrics
     data.stats = {
-        openLost: data.lostItems.filter(function(i) { return i.state_val === 'open'; }).length,
         storedFound: data.foundItems.filter(function(i) { return i.state_val === 'stored'; }).length,
-        matches: data.matches.length,
+        openLost: data.lostItems.filter(function(i) { return i.state_val === 'open'; }).length,
+        matches: data.matches.filter(function(m) { return m.status === 'suggested'; }).length,
         claims: data.myClaims.length
     };
 })();

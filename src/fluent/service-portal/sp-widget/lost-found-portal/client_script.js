@@ -1,7 +1,7 @@
-api.controller = function($scope, spUtil) {
+api.controller = function($scope, spUtil, $window) {
     var c = this;
 
-    c.activeTab = 'found';
+    c.activeTab = 'quick_handin'; // Open on 3-click quick handin first!
     c.reportMode = 'lost';
     c.searchQuery = '';
     c.selectedCategory = '';
@@ -18,6 +18,17 @@ api.controller = function($scope, spUtil) {
         { label: 'Accessory', value: 'accessory' },
         { label: 'Other', value: 'other' }
     ];
+
+    // Quick 3-Click Hand-In State
+    c.quickItem = {
+        photoData: '',
+        photoName: '',
+        category: 'id_card',
+        categoryTitle: 'Student ID Card',
+        dropDesk: 'Library Helpdesk',
+        locationName: 'Library',
+        note: ''
+    };
 
     c.newReport = {
         item_title: '',
@@ -44,6 +55,82 @@ api.controller = function($scope, spUtil) {
 
     c.setCategory = function(cat) {
         c.selectedCategory = cat;
+    };
+
+    // Quick Hand-In Helpers
+    c.triggerPhotoInput = function() {
+        var el = document.getElementById('quickPhotoInput');
+        if (el) el.click();
+    };
+
+    c.handlePhotoUpload = function(inputEl) {
+        if (inputEl.files && inputEl.files[0]) {
+            var file = inputEl.files[0];
+            c.quickItem.photoName = file.name;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $scope.$apply(function() {
+                    c.quickItem.photoData = e.target.result;
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    c.setQuickCategory = function(catVal, catTitle) {
+        c.quickItem.category = catVal;
+        c.quickItem.categoryTitle = catTitle;
+    };
+
+    c.setQuickDesk = function(deskName, locName) {
+        c.quickItem.dropDesk = deskName;
+        c.quickItem.locationName = locName;
+    };
+
+    c.submitQuickHandin = function() {
+        if (!c.quickItem.category) {
+            spUtil.addErrorMessage('Please select what item you found');
+            return;
+        }
+        if (!c.quickItem.dropDesk) {
+            spUtil.addErrorMessage('Please choose where you handed it in');
+            return;
+        }
+        c.loading = true;
+        c.server.get({
+            action: 'quick_handin',
+            category: c.quickItem.category,
+            category_title: c.quickItem.categoryTitle,
+            drop_desk: c.quickItem.dropDesk,
+            location_name: c.quickItem.locationName,
+            note: c.quickItem.note,
+            photo_data: c.quickItem.photoData
+        }).then(function(response) {
+            c.loading = false;
+            c.data = response.data;
+            spUtil.addInfoMessage(response.data.message || 'Item registered in custody');
+            // Reset quick handin
+            c.quickItem.photoData = '';
+            c.quickItem.photoName = '';
+            c.quickItem.note = '';
+            c.activeTab = 'found';
+        });
+    };
+
+    // WhatsApp integration
+    c.openWhatsApp = function(topic) {
+        var msg = "Hi Campus Lost & Found Desk,\n";
+        if (topic === 'found') {
+            msg += "I found an item on campus and want to report it:\n";
+            msg += "- Item: " + (c.quickItem.categoryTitle || 'Property') + "\n";
+            msg += "- Dropped at: " + (c.quickItem.dropDesk || 'Campus Security') + "\n";
+            msg += "- Note: " + (c.quickItem.note || '') + "\n";
+            msg += "(Attaching photo)";
+        } else {
+            msg += "I lost an item on campus and need assistance.";
+        }
+        var url = "https://wa.me/?text=" + encodeURIComponent(msg);
+        $window.open(url, '_blank');
     };
 
     c.filterItems = function(item) {

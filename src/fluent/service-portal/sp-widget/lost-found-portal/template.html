@@ -10,11 +10,33 @@
         </p>
       </div>
       <div class="masthead-actions">
-        <button class="btn btn-primary action-btn" ng-click="c.reportMode='lost'; c.setTab('report')">
-          Report lost property
+        <button class="btn btn-primary action-btn" ng-click="c.setTab('quick_handin')">
+          <i class="fa fa-camera"></i> 3-Click Quick Hand-In
         </button>
-        <button class="btn btn-secondary action-btn" ng-click="c.reportMode='found'; c.setTab('report')">
-          Log found item
+        <button class="btn btn-whatsapp action-btn" ng-click="c.openWhatsApp('found')">
+          <i class="fa fa-whatsapp"></i> WhatsApp Desk
+        </button>
+        <button class="btn btn-secondary action-btn" ng-click="c.reportMode='lost'; c.setTab('report')">
+          Report lost item
+        </button>
+      </div>
+    </div>
+
+    <!-- High-Value Item Empathy Hero -->
+    <div class="empathy-hero">
+      <div class="empathy-hero-body">
+        <div class="empathy-hero-badge">Urgent Item Help</div>
+        <h3 class="empathy-hero-title">Found an ID Card, Keys, or Wallet on campus?</h3>
+        <p class="empathy-hero-desc">
+          A classmate might be locked out of their hostel or unable to sit for an examination today. Handing it to the nearest desk takes 15 seconds.
+        </p>
+      </div>
+      <div class="empathy-hero-actions">
+        <button class="btn btn-sm btn-dark" ng-click="c.setTab('quick_handin')">
+          <i class="fa fa-bolt"></i> 30s Quick Hand-In
+        </button>
+        <button class="btn btn-sm btn-outline-dark" ng-click="c.openWhatsApp('found')">
+          <i class="fa fa-whatsapp"></i> Chat on WhatsApp
         </button>
       </div>
     </div>
@@ -46,6 +68,9 @@
   <!-- Navigation Bar -->
   <nav class="portal-nav">
     <div class="nav-tabs-wrapper">
+      <button class="nav-tab-btn featured-tab" ng-class="{'is-active': c.activeTab == 'quick_handin'}" ng-click="c.setTab('quick_handin')">
+        <i class="fa fa-bolt"></i> 3-Click Hand-In
+      </button>
       <button class="nav-tab-btn" ng-class="{'is-active': c.activeTab == 'found'}" ng-click="c.setTab('found')">
         Found custody
         <span class="tab-count">{{c.data.foundItems.length}}</span>
@@ -59,7 +84,7 @@
         <span class="tab-count match-count">{{c.data.matches.length}}</span>
       </button>
       <button class="nav-tab-btn" ng-class="{'is-active': c.activeTab == 'report'}" ng-click="c.setTab('report')">
-        Submit record
+        Detailed form
       </button>
       <button class="nav-tab-btn" ng-class="{'is-active': c.activeTab == 'claims'}" ng-click="c.setTab('claims')">
         Claims
@@ -67,6 +92,116 @@
       </button>
     </div>
   </nav>
+
+  <!-- TAB 0: 3-CLICK QUICK HAND-IN -->
+  <section class="tab-panel quick-handin-panel" ng-if="c.activeTab == 'quick_handin'">
+    <div class="quick-handin-card">
+      <header class="quick-header">
+        <h2 class="quick-title">3-Click Quick Hand-In</h2>
+        <p class="quick-subtitle">
+          No lengthy forms. Snap a picture, select what it is, and choose which campus desk you dropped it at.
+        </p>
+      </header>
+
+      <!-- Step 1: Photo (Click 1) -->
+      <div class="quick-step-row">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <label class="step-label">Snap or attach a photo</label>
+          <div class="photo-dropzone" ng-click="c.triggerPhotoInput()">
+            <input type="file" id="quickPhotoInput" accept="image/*" capture="environment" style="display:none;" onchange="angular.element(this).scope().c.handlePhotoUpload(this)">
+            <div ng-if="!c.quickItem.photoData" class="photo-prompt">
+              <i class="fa fa-camera photo-icon"></i>
+              <span class="photo-text">Tap to take photo or choose image from device</span>
+            </div>
+            <div ng-if="c.quickItem.photoData" class="photo-preview-box">
+              <img ng-src="{{c.quickItem.photoData}}" class="photo-img" alt="Captured item">
+              <span class="photo-retake-badge"><i class="fa fa-refresh"></i> Tap to change photo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: High-Value Category (Click 2) -->
+      <div class="quick-step-row">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <label class="step-label">What did you find?</label>
+          <div class="quick-category-grid">
+            <button type="button" class="quick-cat-btn" ng-class="{'is-active': c.quickItem.category == 'id_card'}" ng-click="c.setQuickCategory('id_card', 'Student ID Card')">
+              <span class="cat-chip-tag">ID</span>
+              <span class="cat-chip-title">Student ID Card</span>
+              <span class="cat-chip-desc">Needed for exams &amp; entry</span>
+            </button>
+            <button type="button" class="quick-cat-btn" ng-class="{'is-active': c.quickItem.category == 'keys'}" ng-click="c.setQuickCategory('keys', 'Keys')">
+              <span class="cat-chip-tag">KEY</span>
+              <span class="cat-chip-title">Keys</span>
+              <span class="cat-chip-desc">Locked out peer</span>
+            </button>
+            <button type="button" class="quick-cat-btn" ng-class="{'is-active': c.quickItem.category == 'wallet'}" ng-click="c.setQuickCategory('wallet', 'Wallet / Cards')">
+              <span class="cat-chip-tag">PAY</span>
+              <span class="cat-chip-title">Wallet / Purse</span>
+              <span class="cat-chip-desc">Money &amp; identity cards</span>
+            </button>
+            <button type="button" class="quick-cat-btn" ng-class="{'is-active': c.quickItem.category == 'phone'}" ng-click="c.setQuickCategory('phone', 'Mobile Phone')">
+              <span class="cat-chip-tag">TEL</span>
+              <span class="cat-chip-title">Mobile Phone</span>
+              <span class="cat-chip-desc">Study &amp; communication</span>
+            </button>
+            <button type="button" class="quick-cat-btn" ng-class="{'is-active': c.quickItem.category == 'laptop'}" ng-click="c.setQuickCategory('laptop', 'Laptop / Tech')">
+              <span class="cat-chip-tag">PC</span>
+              <span class="cat-chip-title">Laptop</span>
+              <span class="cat-chip-desc">Course projects &amp; notes</span>
+            </button>
+            <button type="button" class="quick-cat-btn" ng-class="{'is-active': c.quickItem.category == 'other'}" ng-click="c.setQuickCategory('other', 'Other Belonging')">
+              <span class="cat-chip-tag">ETC</span>
+              <span class="cat-chip-title">Other Belonging</span>
+              <span class="cat-chip-desc">Book, bottle, bag, etc.</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Drop Desk Location (Click 3) -->
+      <div class="quick-step-row">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <label class="step-label">Which desk did you drop it at?</label>
+          <div class="quick-desk-grid">
+            <button type="button" class="quick-desk-btn" ng-class="{'is-active': c.quickItem.dropDesk == 'Library Helpdesk'}" ng-click="c.setQuickDesk('Library Helpdesk', 'Library')">
+              Library Helpdesk
+            </button>
+            <button type="button" class="quick-desk-btn" ng-class="{'is-active': c.quickItem.dropDesk == 'Main Gate Security'}" ng-click="c.setQuickDesk('Main Gate Security', 'Main Gate')">
+              Main Gate Security
+            </button>
+            <button type="button" class="quick-desk-btn" ng-class="{'is-active': c.quickItem.dropDesk == 'Block B Canteen'}" ng-click="c.setQuickDesk('Block B Canteen', 'Block B Canteen')">
+              Block B Canteen
+            </button>
+            <button type="button" class="quick-desk-btn" ng-class="{'is-active': c.quickItem.dropDesk == 'Admin Reception'}" ng-click="c.setQuickDesk('Admin Reception', 'Admin Block')">
+              Admin Reception
+            </button>
+            <button type="button" class="quick-desk-btn" ng-class="{'is-active': c.quickItem.dropDesk == 'Hostel Warden Office'}" ng-click="c.setQuickDesk('Hostel Warden Office', 'Hostel')">
+              Hostel Warden Office
+            </button>
+          </div>
+          <div class="quick-note-field">
+            <input type="text" class="field-input" placeholder="Optional brief note (e.g., blue lanyard, found near water dispenser)" ng-model="c.quickItem.note">
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Bar -->
+      <div class="quick-action-bar">
+        <button type="button" class="btn btn-primary btn-lg" ng-click="c.submitQuickHandin()" ng-disabled="!c.quickItem.category || !c.quickItem.dropDesk || c.loading">
+          <span ng-if="!c.loading"><i class="fa fa-check"></i> Complete Hand-In &amp; Notify Owner</span>
+          <span ng-if="c.loading">Recording custody...</span>
+        </button>
+        <button type="button" class="btn btn-whatsapp btn-lg" ng-click="c.openWhatsApp('found')">
+          <i class="fa fa-whatsapp"></i> Or Send Photo via WhatsApp
+        </button>
+      </div>
+    </div>
+  </section>
 
   <!-- Filter & Search Bar -->
   <div class="filter-strip" ng-if="c.activeTab == 'found' || c.activeTab == 'lost'">
@@ -99,6 +234,13 @@
           <span class="attr-pill" ng-if="item.brand">{{item.brand}}</span>
           <span class="attr-pill" ng-if="item.colour">{{item.colour}}</span>
         </div>
+
+        <!-- High-Value Empathy Notice -->
+        <div class="empathy-card-notice" ng-if="item.empathy_notice">
+          <i class="fa fa-heart"></i>
+          <span><strong>Urgent Need:</strong> {{item.empathy_notice}}</span>
+        </div>
+
         <p class="card-description" ng-if="item.description">{{item.description}}</p>
         <dl class="card-meta-list">
           <div class="meta-entry">
@@ -144,6 +286,13 @@
           <span class="attr-pill" ng-if="item.brand">{{item.brand}}</span>
           <span class="attr-pill" ng-if="item.colour">{{item.colour}}</span>
         </div>
+
+        <!-- High-Value Empathy Notice -->
+        <div class="empathy-card-notice" ng-if="item.empathy_notice">
+          <i class="fa fa-heart"></i>
+          <span><strong>Urgent Need:</strong> {{item.empathy_notice}}</span>
+        </div>
+
         <p class="card-description" ng-if="item.description">{{item.description}}</p>
         <dl class="card-meta-list">
           <div class="meta-entry">
@@ -222,7 +371,7 @@
     </div>
   </section>
 
-  <!-- TAB 4: SUBMIT RECORD -->
+  <!-- TAB 4: DETAILED FORM -->
   <section class="tab-panel" ng-if="c.activeTab == 'report'">
     <div class="form-container">
       <div class="form-mode-switch">
@@ -348,6 +497,19 @@
       </table>
     </div>
   </section>
+
+  <!-- FOOTER WHATSAPP SUPPORT STRIP -->
+  <footer class="portal-support-strip">
+    <div class="support-info">
+      <span class="support-heading"><i class="fa fa-whatsapp"></i> WhatsApp Campus Desk Bot</span>
+      <span class="support-desc">Prefer reporting via messaging? Tap to open WhatsApp and send photos or location details directly to desk security.</span>
+    </div>
+    <div class="support-actions">
+      <button class="btn btn-whatsapp" ng-click="c.openWhatsApp('found')">
+        <i class="fa fa-whatsapp"></i> Chat with Desk Bot
+      </button>
+    </div>
+  </footer>
 
   <!-- OWNERSHIP CLAIM MODAL -->
   <div class="modal-backdrop" ng-if="c.claimModalOpen">
