@@ -273,6 +273,18 @@ declare global {
                         table: 'sp_portal'
                         id: 'a0b279e90e6141cf96179710679ea450'
                     }
+                    prop_openwa_api_key: {
+                        table: 'sys_properties'
+                        id: '65622819397b48f6a2b30c034fcfd1e7'
+                    }
+                    prop_openwa_api_url: {
+                        table: 'sys_properties'
+                        id: 'a5cedb3ded8c415cb11492a601d158ec'
+                    }
+                    prop_openwa_enabled: {
+                        table: 'sys_properties'
+                        id: 'a4367b8bbeab42afa45100e211295bca'
+                    }
                     prop_twilio_account_sid: {
                         table: 'sys_properties'
                         id: 'cbcc57bad27547ada967e0cca0be83d9'
@@ -288,6 +300,10 @@ declare global {
                     prop_twilio_from_number: {
                         table: 'sys_properties'
                         id: '2893fa42198b43009a19b2b03248ca47'
+                    }
+                    prop_whatsapp_provider: {
+                        table: 'sys_properties'
+                        id: '1397e3d232ab4b4483997f52a3beb3e8'
                     }
                     row_lost_found_main: {
                         table: 'sp_row'
