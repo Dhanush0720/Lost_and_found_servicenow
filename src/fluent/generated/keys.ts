@@ -309,6 +309,10 @@ declare global {
                         table: 'sys_properties'
                         id: '1397e3d232ab4b4483997f52a3beb3e8'
                     }
+                    route_whatsapp_inbound: {
+                        table: 'sys_ws_operation'
+                        id: '2dabac76a02f4422b66ec970115f9b0e'
+                    }
                     row_lost_found_main: {
                         table: 'sp_row'
                         id: '55ea36128f8640c4a8ad05a97b52c838'
@@ -336,6 +340,14 @@ declare global {
                     'src_server_integrations_twilio-service_ts': {
                         table: 'sys_module'
                         id: '97bb3cb0b2dd41bfae0f228635940e0d'
+                    }
+                    'src_server_integrations_whatsapp-webhook-handler_ts': {
+                        table: 'sys_module'
+                        id: 'a466097a8cd34872b6108687e95caf0f'
+                    }
+                    whatsapp_inbound_api: {
+                        table: 'sys_ws_definition'
+                        id: '8437529cbe2a4717b2ef91857e51170e'
                     }
                     widget_lost_found_main: {
                         table: 'sp_widget'
