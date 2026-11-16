@@ -1,8 +1,9 @@
 import { GlideRecord, GlideDateTime, gs } from '@servicenow/glide'
+import { sendWhatsAppMessage } from '../integrations/twilio-service'
 
 /**
  * Handle Claim state transitions:
- * - Approved: Set Found Item to "Handover pending", add Custody Log entry (Released), create handover task
+ * - Approved: Set Found Item to "Handover pending", add Custody Log entry (Released), create handover task, send WhatsApp
  * - Completed: Set both items to "Returned", add Custody Log entry (Returned)
  * - Rejected: Set Found Item back to "Stored"
  */
@@ -41,6 +42,22 @@ export function onClaimStateChange(current: any, previous: any): void {
         task.setValue('description', 'Hand over the found item to the claimant. Claim: ' + current.getValue('number'))
         task.setValue('assigned_to', current.getValue('approver'))
         task.insert()
+
+        // Send WhatsApp notification to claimant
+        var claimantId = current.getValue('claimant')
+        if (claimantId) {
+            var claimantUser = new GlideRecord('sys_user')
+            if (claimantUser.get(claimantId)) {
+                var phone = claimantUser.getValue('mobile_phone') || claimantUser.getValue('phone')
+                if (phone) {
+                    var claimNum = current.getValue('number')
+                    sendWhatsAppMessage(
+                        phone,
+                        'Lost & Found Update: Your Claim ' + claimNum + ' has been APPROVED. Please visit the Campus Lost & Found desk to collect your item.'
+                    )
+                }
+            }
+        }
     }
 
     if (newState === 'completed') {
@@ -77,4 +94,3 @@ export function onClaimStateChange(current: any, previous: any): void {
         }
     }
 }
-

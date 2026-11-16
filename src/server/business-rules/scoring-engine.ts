@@ -1,4 +1,5 @@
 import { GlideRecord, GlideDateTime, gs } from '@servicenow/glide'
+import { sendWhatsAppMessage } from '../integrations/twilio-service'
 
 /**
  * Scoring engine: compares a lost item against a found item.
@@ -64,8 +65,7 @@ export function computeMatchScore(lost: GlideRecord, found: GlideRecord): { scor
         var lostDate = new GlideDateTime(lostDateStr)
         var foundDate = new GlideDateTime(foundDateStr)
         var diffMs = Math.abs(
-            parseInt(lostDate.getNumericValue() as any) -
-            parseInt(foundDate.getNumericValue() as any)
+            lostDate.getNumericValue() - foundDate.getNumericValue()
         )
         var diffDays = diffMs / (1000 * 60 * 60 * 24)
         if (diffDays <= 1) {
@@ -165,6 +165,25 @@ export function upsertMatchSuggestion(
         match.setValue('score_breakdown', JSON.stringify(breakdown))
         match.setValue('status', 'suggested')
         match.insert()
+
+        // Send automated WhatsApp alert for High match
+        if (band === 'high') {
+            var lostItem = new GlideRecord('x_1526023_lost_and_lost_item')
+            if (lostItem.get(lostSysId)) {
+                var reporterId = lostItem.getValue('reporter')
+                if (reporterId) {
+                    var reporter = new GlideRecord('sys_user')
+                    if (reporter.get(reporterId)) {
+                        var phone = reporter.getValue('mobile_phone') || reporter.getValue('phone')
+                        if (phone) {
+                            sendWhatsAppMessage(
+                                phone,
+                                'Lost & Found Alert: A high-confidence match (' + score + '% match) was found for your reported item: "' + lostItem.getValue('item_title') + '". Visit the Lost & Found desk or portal to verify!'
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }
-

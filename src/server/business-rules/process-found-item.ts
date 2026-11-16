@@ -1,5 +1,5 @@
 import { GlideRecord, GlideDateTime, gs } from '@servicenow/glide'
-import { computeMatchScore, getBand, upsertMatchSuggestion } from './scoring-engine.ts'
+import { computeMatchScore, getBand, upsertMatchSuggestion } from './scoring-engine'
 
 /**
  * After insert on Found Item:
@@ -56,4 +56,3 @@ export function processFoundItemOnInsert(current: any, previous: any): void {
         }
     }
 }
-

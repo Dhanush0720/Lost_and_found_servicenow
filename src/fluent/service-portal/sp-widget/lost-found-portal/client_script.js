@@ -1,4 +1,4 @@
-api.controller = function($scope, spUtil, $window) {
+api.controller = function ($scope, spUtil, $window) {
     var c = this;
 
     c.activeTab = 'quick_handin'; // Open on 3-click quick handin first!
@@ -49,27 +49,27 @@ api.controller = function($scope, spUtil, $window) {
         proof_of_ownership: ''
     };
 
-    c.setTab = function(tab) {
+    c.setTab = function (tab) {
         c.activeTab = tab;
     };
 
-    c.setCategory = function(cat) {
+    c.setCategory = function (cat) {
         c.selectedCategory = cat;
     };
 
     // Quick Hand-In Helpers
-    c.triggerPhotoInput = function() {
+    c.triggerPhotoInput = function () {
         var el = document.getElementById('quickPhotoInput');
         if (el) el.click();
     };
 
-    c.handlePhotoUpload = function(inputEl) {
+    c.handlePhotoUpload = function (inputEl) {
         if (inputEl.files && inputEl.files[0]) {
             var file = inputEl.files[0];
             c.quickItem.photoName = file.name;
             var reader = new FileReader();
-            reader.onload = function(e) {
-                $scope.$apply(function() {
+            reader.onload = function (e) {
+                $scope.$apply(function () {
                     c.quickItem.photoData = e.target.result;
                 });
             };
@@ -77,17 +77,17 @@ api.controller = function($scope, spUtil, $window) {
         }
     };
 
-    c.setQuickCategory = function(catVal, catTitle) {
+    c.setQuickCategory = function (catVal, catTitle) {
         c.quickItem.category = catVal;
         c.quickItem.categoryTitle = catTitle;
     };
 
-    c.setQuickDesk = function(deskName, locName) {
+    c.setQuickDesk = function (deskName, locName) {
         c.quickItem.dropDesk = deskName;
         c.quickItem.locationName = locName;
     };
 
-    c.submitQuickHandin = function() {
+    c.submitQuickHandin = function () {
         if (!c.quickItem.category) {
             spUtil.addErrorMessage('Please select what item you found');
             return;
@@ -105,7 +105,7 @@ api.controller = function($scope, spUtil, $window) {
             location_name: c.quickItem.locationName,
             note: c.quickItem.note,
             photo_data: c.quickItem.photoData
-        }).then(function(response) {
+        }).then(function (response) {
             c.loading = false;
             c.data = response.data;
             spUtil.addInfoMessage(response.data.message || 'Item registered in custody');
@@ -118,22 +118,27 @@ api.controller = function($scope, spUtil, $window) {
     };
 
     // WhatsApp integration
-    c.openWhatsApp = function(topic) {
+    c.openWhatsApp = function (topic) {
+        var deskPhoneNumber = '19362260219';
+
         var msg = "Hi Campus Lost & Found Desk,\n";
         if (topic === 'found') {
             msg += "I found an item on campus and want to report it:\n";
             msg += "- Item: " + (c.quickItem.categoryTitle || 'Property') + "\n";
             msg += "- Dropped at: " + (c.quickItem.dropDesk || 'Campus Security') + "\n";
-            msg += "- Note: " + (c.quickItem.note || '') + "\n";
+            if (c.quickItem.note) {
+                msg += "- Note: " + c.quickItem.note + "\n";
+            }
             msg += "(Attaching photo)";
         } else {
             msg += "I lost an item on campus and need assistance.";
         }
-        var url = "https://wa.me/?text=" + encodeURIComponent(msg);
+        // Direct WhatsApp Click-to-Chat with phone number opens chat inbox directly without requiring user to save contact
+        var url = "https://api.whatsapp.com/send?phone=" + deskPhoneNumber + "&text=" + encodeURIComponent(msg);
         $window.open(url, '_blank');
     };
 
-    c.filterItems = function(item) {
+    c.filterItems = function (item) {
         if (c.selectedCategory && item.category_val !== c.selectedCategory) {
             return false;
         }
@@ -149,7 +154,7 @@ api.controller = function($scope, spUtil, $window) {
         return true;
     };
 
-    c.submitReport = function() {
+    c.submitReport = function () {
         if (!c.newReport.item_title) {
             spUtil.addErrorMessage('Item title is required');
             return;
@@ -173,7 +178,7 @@ api.controller = function($scope, spUtil, $window) {
             payload.storage_location = c.newReport.storage_location;
         }
 
-        c.server.get(payload).then(function(response) {
+        c.server.get(payload).then(function (response) {
             c.loading = false;
             c.data = response.data;
             spUtil.addInfoMessage(response.data.message || 'Report submitted');
@@ -185,10 +190,10 @@ api.controller = function($scope, spUtil, $window) {
         });
     };
 
-    c.openClaimModal = function(foundItem) {
+    c.openClaimModal = function (foundItem) {
         c.claimData.found_item_id = foundItem.sys_id;
         c.claimData.found_item_title = foundItem.item_title;
-        var matchingLost = (c.data.lostItems || []).filter(function(l) {
+        var matchingLost = (c.data.lostItems || []).filter(function (l) {
             return l.category_val === foundItem.category_val;
         });
         if (matchingLost.length > 0) {
@@ -200,11 +205,11 @@ api.controller = function($scope, spUtil, $window) {
         c.claimModalOpen = true;
     };
 
-    c.closeClaimModal = function() {
+    c.closeClaimModal = function () {
         c.claimModalOpen = false;
     };
 
-    c.submitClaim = function() {
+    c.submitClaim = function () {
         if (!c.claimData.lost_item_id) {
             spUtil.addErrorMessage('Select the corresponding lost item report');
             return;
@@ -219,7 +224,7 @@ api.controller = function($scope, spUtil, $window) {
             lost_item_id: c.claimData.lost_item_id,
             found_item_id: c.claimData.found_item_id,
             proof_of_ownership: c.claimData.proof_of_ownership
-        }).then(function(response) {
+        }).then(function (response) {
             c.loading = false;
             c.data = response.data;
             c.claimModalOpen = false;
@@ -228,12 +233,12 @@ api.controller = function($scope, spUtil, $window) {
         });
     };
 
-    c.updateMatch = function(match, newStatus) {
+    c.updateMatch = function (match, newStatus) {
         c.server.get({
             action: 'update_match_status',
             match_id: match.sys_id,
             status: newStatus
-        }).then(function(response) {
+        }).then(function (response) {
             c.data = response.data;
             spUtil.addInfoMessage(response.data.message || 'Status updated');
         });

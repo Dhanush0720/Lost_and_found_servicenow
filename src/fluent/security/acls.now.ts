@@ -1,23 +1,19 @@
 import '@servicenow/sdk/global'
-import { Role, Acl } from '@servicenow/sdk/core'
+import { Acl } from '@servicenow/sdk/core'
+import { roleAdmin, roleStaff, roleSecurity, roleStudent, lostFoundAdmin } from './roles.now'
 
-// ──────────────────────────────────────────────────
-// Role: lost_found_admin for desk staff
-// ──────────────────────────────────────────────────
-export const lostFoundAdmin = Role({
-    name: 'x_1526023_lost_and.lost_found_admin',
-    description: 'Lost and Found desk staff - full access to all Lost and Found tables',
-})
+// Re-export roles for convenience
+export { roleAdmin, roleStaff, roleSecurity, roleStudent, lostFoundAdmin }
 
 // ════════════════════════════════════════════════════
-// LOCATION — Everyone can read
+// LOCATION — Everyone can read; admins and staff can manage
 // ════════════════════════════════════════════════════
 Acl({
     $id: Now.ID['acl_location_read'],
     type: 'record',
     table: 'x_1526023_lost_and_location',
     operation: 'read',
-    roles: [],
+    securityAttribute: 'user_is_authenticated',
     adminOverrides: true,
     description: 'Everyone can read locations',
 })
@@ -27,7 +23,7 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_location',
     operation: 'create',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin],
     adminOverrides: true,
     description: 'Only admins can create locations',
 })
@@ -37,7 +33,7 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_location',
     operation: 'write',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin],
     adminOverrides: true,
     description: 'Only admins can edit locations',
 })
@@ -47,7 +43,7 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_location',
     operation: 'delete',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin],
     adminOverrides: true,
     description: 'Only admins can delete locations',
 })
@@ -60,9 +56,9 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_lost_item',
     operation: 'create',
-    roles: [],
+    securityAttribute: 'user_is_authenticated',
     adminOverrides: true,
-    description: 'Anyone signed in can create Lost Items',
+    description: 'Anyone signed in (students, staff, admin) can create Lost Items',
 })
 
 Acl({
@@ -70,11 +66,14 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_lost_item',
     operation: 'read',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin, roleStaff],
     adminOverrides: true,
-    description: 'Lost and Found admin can read all Lost Items; reporters can read their own via script',
+    description: 'Admins and staff can read all Lost Items; reporters can read their own',
     script: `
-        answer = gs.hasRole('x_1526023_lost_and.lost_found_admin') || current.getValue('reporter') == gs.getUserID();
+        answer = gs.hasRole('x_1526023_lost_and.admin') ||
+                 gs.hasRole('x_1526023_lost_and.lost_found_admin') ||
+                 gs.hasRole('x_1526023_lost_and.staff') ||
+                 current.getValue('reporter') == gs.getUserID();
     `,
 })
 
@@ -83,11 +82,14 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_lost_item',
     operation: 'write',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin, roleStaff],
     adminOverrides: true,
-    description: 'Lost and Found admin can edit all Lost Items; reporters can edit their own via script',
+    description: 'Admins and staff can edit all Lost Items; reporters can edit their own',
     script: `
-        answer = gs.hasRole('x_1526023_lost_and.lost_found_admin') || current.getValue('reporter') == gs.getUserID();
+        answer = gs.hasRole('x_1526023_lost_and.admin') ||
+                 gs.hasRole('x_1526023_lost_and.lost_found_admin') ||
+                 gs.hasRole('x_1526023_lost_and.staff') ||
+                 current.getValue('reporter') == gs.getUserID();
     `,
 })
 
@@ -96,22 +98,22 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_lost_item',
     operation: 'delete',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin],
     adminOverrides: true,
     description: 'Only admins can delete Lost Items',
 })
 
 // ════════════════════════════════════════════════════
-// FOUND ITEM — Anyone signed in can create; visible only to desk role
+// FOUND ITEM — Anyone signed in can create; visible only to desk/staff/security/admin
 // ════════════════════════════════════════════════════
 Acl({
     $id: Now.ID['acl_found_item_create'],
     type: 'record',
     table: 'x_1526023_lost_and_found_item',
     operation: 'create',
-    roles: [],
+    securityAttribute: 'user_is_authenticated',
     adminOverrides: true,
-    description: 'Anyone signed in can create Found Items',
+    description: 'Anyone signed in can create/log Found Items',
 })
 
 Acl({
@@ -119,9 +121,9 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_found_item',
     operation: 'read',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin, roleStaff, roleSecurity],
     adminOverrides: true,
-    description: 'Only Lost and Found desk role can read Found Items',
+    description: 'Admins, desk staff, college staff, and security can read Found Items',
 })
 
 Acl({
@@ -129,9 +131,9 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_found_item',
     operation: 'write',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin, roleStaff, roleSecurity],
     adminOverrides: true,
-    description: 'Only Lost and Found desk role can edit Found Items',
+    description: 'Admins, desk staff, college staff, and security can edit Found Items',
 })
 
 Acl({
@@ -139,22 +141,22 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_found_item',
     operation: 'delete',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin],
     adminOverrides: true,
     description: 'Only admins can delete Found Items',
 })
 
 // ════════════════════════════════════════════════════
-// MATCH SUGGESTION — visible only to desk role
+// MATCH SUGGESTION — visible to desk role, staff, and admin
 // ════════════════════════════════════════════════════
 Acl({
     $id: Now.ID['acl_match_read'],
     type: 'record',
     table: 'x_1526023_lost_and_match',
     operation: 'read',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin, roleStaff],
     adminOverrides: true,
-    description: 'Only Lost and Found desk role can read Match Suggestions',
+    description: 'Admins, desk staff, and staff can read Match Suggestions',
 })
 
 Acl({
@@ -162,9 +164,9 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_match',
     operation: 'write',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin, roleStaff],
     adminOverrides: true,
-    description: 'Only Lost and Found desk role can edit Match Suggestions',
+    description: 'Admins, desk staff, and staff can edit Match Suggestions',
 })
 
 Acl({
@@ -172,9 +174,9 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_match',
     operation: 'create',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin, roleStaff],
     adminOverrides: true,
-    description: 'Only Lost and Found desk role can create Match Suggestions',
+    description: 'Admins, desk staff, and staff can create Match Suggestions',
 })
 
 Acl({
@@ -182,7 +184,7 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_match',
     operation: 'delete',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin],
     adminOverrides: true,
     description: 'Only admins can delete Match Suggestions',
 })
@@ -195,9 +197,9 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_claim',
     operation: 'create',
-    roles: [],
+    securityAttribute: 'user_is_authenticated',
     adminOverrides: true,
-    description: 'Anyone signed in can create Claims',
+    description: 'Anyone signed in (students, staff) can create Claims',
 })
 
 Acl({
@@ -205,11 +207,14 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_claim',
     operation: 'read',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin, roleStaff],
     adminOverrides: true,
-    description: 'Desk role can read all Claims; claimants can read their own',
+    description: 'Admins and staff can read all Claims; claimants can read their own',
     script: `
-        answer = gs.hasRole('x_1526023_lost_and.lost_found_admin') || current.getValue('claimant') == gs.getUserID();
+        answer = gs.hasRole('x_1526023_lost_and.admin') ||
+                 gs.hasRole('x_1526023_lost_and.lost_found_admin') ||
+                 gs.hasRole('x_1526023_lost_and.staff') ||
+                 current.getValue('claimant') == gs.getUserID();
     `,
 })
 
@@ -218,9 +223,9 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_claim',
     operation: 'write',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin, roleStaff],
     adminOverrides: true,
-    description: 'Only desk role can edit Claims',
+    description: 'Only desk staff and admins can edit Claims',
 })
 
 Acl({
@@ -228,22 +233,22 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_claim',
     operation: 'delete',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin],
     adminOverrides: true,
     description: 'Only admins can delete Claims',
 })
 
 // ════════════════════════════════════════════════════
-// CUSTODY LOG — visible only to desk role
+// CUSTODY LOG — visible to desk role, security, staff, and admin
 // ════════════════════════════════════════════════════
 Acl({
     $id: Now.ID['acl_custody_log_read'],
     type: 'record',
     table: 'x_1526023_lost_and_custody_log',
     operation: 'read',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin, roleStaff, roleSecurity],
     adminOverrides: true,
-    description: 'Only Lost and Found desk role can read Custody Logs',
+    description: 'Admins, desk staff, staff, and security can read Custody Logs',
 })
 
 Acl({
@@ -251,9 +256,9 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_custody_log',
     operation: 'write',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin, roleStaff, roleSecurity],
     adminOverrides: true,
-    description: 'Only Lost and Found desk role can edit Custody Logs',
+    description: 'Admins, desk staff, staff, and security can edit Custody Logs',
 })
 
 Acl({
@@ -261,9 +266,9 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_custody_log',
     operation: 'create',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin, roleStaff, roleSecurity],
     adminOverrides: true,
-    description: 'Only Lost and Found desk role can create Custody Logs',
+    description: 'Admins, desk staff, staff, and security can create Custody Logs',
 })
 
 Acl({
@@ -271,8 +276,7 @@ Acl({
     type: 'record',
     table: 'x_1526023_lost_and_custody_log',
     operation: 'delete',
-    roles: [lostFoundAdmin],
+    roles: [roleAdmin, lostFoundAdmin],
     adminOverrides: true,
     description: 'Only admins can delete Custody Logs',
 })
-

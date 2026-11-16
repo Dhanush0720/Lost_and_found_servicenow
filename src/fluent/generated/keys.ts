@@ -273,6 +273,22 @@ declare global {
                         table: 'sp_portal'
                         id: 'a0b279e90e6141cf96179710679ea450'
                     }
+                    prop_twilio_account_sid: {
+                        table: 'sys_properties'
+                        id: 'cbcc57bad27547ada967e0cca0be83d9'
+                    }
+                    prop_twilio_auth_token: {
+                        table: 'sys_properties'
+                        id: '397f968aaae2483ba066e5a83e957940'
+                    }
+                    prop_twilio_enabled: {
+                        table: 'sys_properties'
+                        id: 'ab5dacd180ef4531b1346218d773cc4a'
+                    }
+                    prop_twilio_from_number: {
+                        table: 'sys_properties'
+                        id: '2893fa42198b43009a19b2b03248ca47'
+                    }
                     row_lost_found_main: {
                         table: 'sp_row'
                         id: '55ea36128f8640c4a8ad05a97b52c838'
@@ -296,6 +312,10 @@ declare global {
                     'src_server_business-rules_scoring-engine_ts': {
                         table: 'sys_module'
                         id: 'a1b0d6318fd246a1a9d0bd2b6170bfb5'
+                    }
+                    'src_server_integrations_twilio-service_ts': {
+                        table: 'sys_module'
+                        id: '97bb3cb0b2dd41bfae0f228635940e0d'
                     }
                     widget_lost_found_main: {
                         table: 'sp_widget'
@@ -416,6 +436,19 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '08e8178e6ff24c3eb475e3ac49f724c8'
+                        key: {
+                            sys_security_acl: '42e060c15dc7496d9397781e75e22668'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: '093265c5e5614654b6f5790f5e1d9be4'
                         key: {
@@ -427,11 +460,63 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '0acd85c000e146c498ed994e27c896c0'
+                        key: {
+                            sys_security_acl: '0db97bf285c94b0a84b00ca0727f8023'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '0ae090281d0e4f29aed75e5a705be5ab'
+                        key: {
+                            sys_security_acl: 'd374a438c2be4ff7827b7b760fce4f38'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '0b252dda434640d7be72b628d9f674ae'
+                        key: {
+                            sys_security_acl: '5fe3be8c4a6f45cd9a52013a535c0e65'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: '0ca2538c805142448b78cda31110371e'
                         key: {
                             name: 'x_1526023_lost_and_lost_item'
                             element: 'last_seen_location'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '0ee46538b3ca4731bc455224f4d9f201'
+                        key: {
+                            sys_security_acl: '71f8d4acec68442aa13a019ca8dda0df'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
                         }
                     },
                     {
@@ -686,6 +771,19 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '22529354a40f439d97a7b7ec6d6fd4d9'
+                        key: {
+                            sys_security_acl: '34557c400ae8436fa001b0be53897e0d'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_number'
                         id: '23307beec04b457b81d5e473b6769e98'
                         key: {
@@ -700,6 +798,19 @@ declare global {
                             name: 'x_1526023_lost_and_lost_item'
                             element: 'item_title'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '23d64f998b174f9a95a356330dfb60ce'
+                        key: {
+                            sys_security_acl: '0db97bf285c94b0a84b00ca0727f8023'
+                            sys_user_role: {
+                                id: 'b00b9fac8dc74dae9214bc9d96ee6d32'
+                                key: {
+                                    name: 'x_1526023_lost_and.staff'
+                                }
+                            }
                         }
                     },
                     {
@@ -718,6 +829,19 @@ declare global {
                             name: 'x_1526023_lost_and_custody_log'
                             element: 'NULL'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '24b0f89f8e044038943f51d5b2971232'
+                        key: {
+                            sys_security_acl: '34557c400ae8436fa001b0be53897e0d'
+                            sys_user_role: {
+                                id: 'b00b9fac8dc74dae9214bc9d96ee6d32'
+                                key: {
+                                    name: 'x_1526023_lost_and.staff'
+                                }
+                            }
                         }
                     },
                     {
@@ -760,6 +884,19 @@ declare global {
                             name: 'x_1526023_lost_and_lost_item'
                             element: 'description'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '25e40ab5508944908e59216b220f6550'
+                        key: {
+                            sys_security_acl: '0594c2bbd3714f3a9fd1406a4804a238'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
                         }
                     },
                     {
@@ -814,6 +951,19 @@ declare global {
                         key: {
                             name: 'x_1526023_lost_and_found_item'
                             element: 'found_date'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '2c46baaef4e94bb1b261c0943c3fe919'
+                        key: {
+                            sys_security_acl: '79f733cf4037453b9f30685130d2f490'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
                         }
                     },
                     {
@@ -1027,6 +1177,19 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '397b4306d5c1482a8184f3eb75fea6e0'
+                        key: {
+                            sys_security_acl: '44c23cd2743c4e85ad8b476f5f39a328'
+                            sys_user_role: {
+                                id: 'b00b9fac8dc74dae9214bc9d96ee6d32'
+                                key: {
+                                    name: 'x_1526023_lost_and.staff'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: '3a4d5d350d8747d0ab5b66a35d4a9153'
                         key: {
@@ -1123,6 +1286,24 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_user_role_contains'
+                        id: '407e69f2ae5a4d12b3eaf940a2c3f5b4'
+                        key: {
+                            role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
+                            contains: {
+                                id: 'b00b9fac8dc74dae9214bc9d96ee6d32'
+                                key: {
+                                    name: 'x_1526023_lost_and.staff'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_ui_element'
                         id: '423a2b5c85b346609d88f191379f7fc6'
                         key: {
@@ -1197,6 +1378,19 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '4368e6d89bbe4a0e882cdaac7a1244c8'
+                        key: {
+                            sys_security_acl: '375574bc15744a3dbe4c183b422775ce'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: '44353c449d20461381cf75cac0a00130'
                         key: {
@@ -1250,12 +1444,58 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '4504da2d040e4f44ad47cc591c612d77'
+                        key: {
+                            sys_security_acl: '0594c2bbd3714f3a9fd1406a4804a238'
+                            sys_user_role: {
+                                id: 'b00b9fac8dc74dae9214bc9d96ee6d32'
+                                key: {
+                                    name: 'x_1526023_lost_and.staff'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: '452307c3140c4ebd925be58f7c271c46'
                         key: {
                             name: 'x_1526023_lost_and_lost_item'
                             element: 'category'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_user_role'
+                        id: '45e4189030404e1e9bf1015ebdb1eb57'
+                        key: {
+                            name: 'x_1526023_lost_and.admin'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '46929f3903624c6091165006e4a56361'
+                        key: {
+                            sys_security_acl: 'b2f1b3d112004b7b9f066eb0827026dd'
+                            sys_user_role: {
+                                id: 'b00b9fac8dc74dae9214bc9d96ee6d32'
+                                key: {
+                                    name: 'x_1526023_lost_and.staff'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '4728a746d1334170ade9d2342c3bba0b'
+                        key: {
+                            sys_security_acl: '79f733cf4037453b9f30685130d2f490'
+                            sys_user_role: {
+                                id: 'b3e8d5c21dfb49368c74983153ab5800'
+                                key: {
+                                    name: 'x_1526023_lost_and.security'
+                                }
+                            }
                         }
                     },
                     {
@@ -1333,6 +1573,19 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '4a21b3590b45464aa729df4905a383c2'
+                        key: {
+                            sys_security_acl: '812635172a1a4c79b3f53f9a572c47d7'
+                            sys_user_role: {
+                                id: 'b3e8d5c21dfb49368c74983153ab5800'
+                                key: {
+                                    name: 'x_1526023_lost_and.security'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: '4a87bb49fbe342da8f4bc0adc4fa35e9'
                         key: {
@@ -1396,6 +1649,19 @@ declare global {
                             value: 'bag'
                             language: 'en'
                             dependent_value: 'NULL'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '4e8975c2e6374d07bac1eb7cd4fe66fc'
+                        key: {
+                            sys_security_acl: 'a9e51cc328754778a908f0971503f986'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
                         }
                     },
                     {
@@ -1575,6 +1841,19 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '557491357842401682c67d65c6f98198'
+                        key: {
+                            sys_security_acl: 'd374a438c2be4ff7827b7b760fce4f38'
+                            sys_user_role: {
+                                id: 'b3e8d5c21dfb49368c74983153ab5800'
+                                key: {
+                                    name: 'x_1526023_lost_and.security'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_ui_element'
                         id: '5603cac03e0145ac9f5ee8efd5b61c61'
                         key: {
@@ -1602,6 +1881,19 @@ declare global {
                         key: {
                             name: 'x_1526023_lost_and_lost_item'
                             element: 'item_title'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '572a8b1657d9444abf8f941d9535af19'
+                        key: {
+                            sys_security_acl: '42e060c15dc7496d9397781e75e22668'
+                            sys_user_role: {
+                                id: 'b00b9fac8dc74dae9214bc9d96ee6d32'
+                                key: {
+                                    name: 'x_1526023_lost_and.staff'
+                                }
+                            }
                         }
                     },
                     {
@@ -1696,6 +1988,19 @@ declare global {
                                 }
                             }
                             sys_domain: 'global'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '5d2e42af7a15483e990d0e7f723d0616'
+                        key: {
+                            sys_security_acl: '812635172a1a4c79b3f53f9a572c47d7'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
                         }
                     },
                     {
@@ -2020,6 +2325,19 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '7254ed99c8444f17a1aa0920bae0e860'
+                        key: {
+                            sys_security_acl: 'af17440f07544820b2d44c830ec5de2f'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: '72fca47a1cc04f5896de43172c64c6a1'
                         key: {
@@ -2074,6 +2392,24 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_user_role_contains'
+                        id: '790399c1eee3422e8ee6770ed5a28538'
+                        key: {
+                            role: {
+                                id: '99f3114296944914992c6ba51250f687'
+                                key: {
+                                    name: 'x_1526023_lost_and.lost_found_admin'
+                                }
+                            }
+                            contains: {
+                                id: 'b3e8d5c21dfb49368c74983153ab5800'
+                                key: {
+                                    name: 'x_1526023_lost_and.security'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_ui_form_section'
                         id: '7a5778c958b045a3a86275652d4ee9f3'
                         key: {
@@ -2122,6 +2458,19 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '7c2e5d663bc44a6393c8becd6c5fdec9'
+                        key: {
+                            sys_security_acl: '86430be6b7254934851e8ffba190d7b4'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: '7c4ce8790b1c461181f4a4a3072705be'
                         key: {
@@ -2130,6 +2479,19 @@ declare global {
                             value: 'released'
                             language: 'en'
                             dependent_value: 'NULL'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '7c7444c7ae03441cb7ebc01f7e473c98'
+                        key: {
+                            sys_security_acl: 'f254d628ccb341f89312f4cbbafbe3cf'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
                         }
                     },
                     {
@@ -2230,6 +2592,19 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '80932a982c3f4f47ac75a76fb82daa71'
+                        key: {
+                            sys_security_acl: '0594c2bbd3714f3a9fd1406a4804a238'
+                            sys_user_role: {
+                                id: 'b3e8d5c21dfb49368c74983153ab5800'
+                                key: {
+                                    name: 'x_1526023_lost_and.security'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_ui_element'
                         id: '82ea6a43848249dfb3667fdd0e311923'
                         key: {
@@ -2280,6 +2655,19 @@ declare global {
                             name: 'x_1526023_lost_and_found_item'
                             element: 'state'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '83da95e5966641c39fc0b97972711316'
+                        key: {
+                            sys_security_acl: 'eb8613d1d46d4615ae9388288cebdfcb'
+                            sys_user_role: {
+                                id: 'b00b9fac8dc74dae9214bc9d96ee6d32'
+                                key: {
+                                    name: 'x_1526023_lost_and.staff'
+                                }
+                            }
                         }
                     },
                     {
@@ -2467,11 +2855,42 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_user_role_contains'
+                        id: '963a8b59089e4010b9cdf9b0828911e3'
+                        key: {
+                            role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
+                            contains: {
+                                id: '99f3114296944914992c6ba51250f687'
+                                key: {
+                                    name: 'x_1526023_lost_and.lost_found_admin'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: '9646e3de70b0498b83857b41d0d6208f'
                         key: {
                             name: 'x_1526023_lost_and_match'
                             element: 'lost_item'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '965ce344afbc463ab679f95d12719f61'
+                        key: {
+                            sys_security_acl: '79f733cf4037453b9f30685130d2f490'
+                            sys_user_role: {
+                                id: 'b00b9fac8dc74dae9214bc9d96ee6d32'
+                                key: {
+                                    name: 'x_1526023_lost_and.staff'
+                                }
+                            }
                         }
                     },
                     {
@@ -2494,6 +2913,19 @@ declare global {
                             }
                             element: '.end_split'
                             position: '5'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '969c6358ac6c4905a4f5efd83d0bcf20'
+                        key: {
+                            sys_security_acl: '1f9d224144f34fdabf87722c9458b8c8'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
                         }
                     },
                     {
@@ -2589,10 +3021,41 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_user_role_contains'
+                        id: '9b58a5c0de854d93bad0f3b9e162677c'
+                        key: {
+                            role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
+                            contains: {
+                                id: 'a27b5021a96f46eb8a17a28a5b79d528'
+                                key: {
+                                    name: 'x_1526023_lost_and.student'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_db_object'
                         id: '9f00d8288cd645139eab1c1ab3404818'
                         key: {
                             name: 'x_1526023_lost_and_found_item'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '9fe1c50871cd4e85abdbff6527176e34'
+                        key: {
+                            sys_security_acl: '812635172a1a4c79b3f53f9a572c47d7'
+                            sys_user_role: {
+                                id: 'b00b9fac8dc74dae9214bc9d96ee6d32'
+                                key: {
+                                    name: 'x_1526023_lost_and.staff'
+                                }
+                            }
                         }
                     },
                     {
@@ -2625,6 +3088,26 @@ declare global {
                             value: 'closed'
                             language: 'en'
                             dependent_value: 'NULL'
+                        }
+                    },
+                    {
+                        table: 'sys_user_role'
+                        id: 'a27b5021a96f46eb8a17a28a5b79d528'
+                        key: {
+                            name: 'x_1526023_lost_and.student'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: 'a315f7528ae44758a85cc2f17667ef81'
+                        key: {
+                            sys_security_acl: 'af17440f07544820b2d44c830ec5de2f'
+                            sys_user_role: {
+                                id: 'b3e8d5c21dfb49368c74983153ab5800'
+                                key: {
+                                    name: 'x_1526023_lost_and.security'
+                                }
+                            }
                         }
                     },
                     {
@@ -2841,6 +3324,13 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_user_role'
+                        id: 'b00b9fac8dc74dae9214bc9d96ee6d32'
+                        key: {
+                            name: 'x_1526023_lost_and.staff'
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: 'b0de6def3a654e0bad967c06015e282a'
                         key: {
@@ -2913,6 +3403,13 @@ declare global {
                             }
                             element: 'score_breakdown'
                             position: '8'
+                        }
+                    },
+                    {
+                        table: 'sys_user_role'
+                        id: 'b3e8d5c21dfb49368c74983153ab5800'
+                        key: {
+                            name: 'x_1526023_lost_and.security'
                         }
                     },
                     {
@@ -3017,6 +3514,19 @@ declare global {
                             name: 'x_1526023_lost_and_lost_item'
                             element: 'last_seen_date'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: 'baacf54c23734d349fba4331730554e5'
+                        key: {
+                            sys_security_acl: 'eb8613d1d46d4615ae9388288cebdfcb'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
                         }
                     },
                     {
@@ -3173,6 +3683,24 @@ declare global {
                             }
                             element: 'status'
                             position: '3'
+                        }
+                    },
+                    {
+                        table: 'sys_user_role_contains'
+                        id: 'c27c6216233e456fb0af00047e63736d'
+                        key: {
+                            role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
+                            contains: {
+                                id: 'b3e8d5c21dfb49368c74983153ab5800'
+                                key: {
+                                    name: 'x_1526023_lost_and.security'
+                                }
+                            }
                         }
                     },
                     {
@@ -3529,6 +4057,32 @@ declare global {
                     },
                     {
                         table: 'sys_security_acl_role'
+                        id: 'd4af6efa0bb349f5979bc3e13c0eec57'
+                        key: {
+                            sys_security_acl: 'b2f1b3d112004b7b9f066eb0827026dd'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: 'd4c570ac492843a1b4f037f9a6e15ced'
+                        key: {
+                            sys_security_acl: 'd59c1ee1c7a344cc94663c281cbfea0f'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
                         id: 'd532db9d356f4f1da577803ca9cd954c'
                         key: {
                             sys_security_acl: '44c23cd2743c4e85ad8b476f5f39a328'
@@ -3618,6 +4172,19 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: 'dccd0aded37441eabd470a12b3bd79b3'
+                        key: {
+                            sys_security_acl: '44c23cd2743c4e85ad8b476f5f39a328'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: 'ddd697fbe83f4d38977d24be003be3c6'
                         key: {
@@ -3688,6 +4255,19 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: 'e7535d3e77924fdfb975469639d796d6'
+                        key: {
+                            sys_security_acl: '5fe3be8c4a6f45cd9a52013a535c0e65'
+                            sys_user_role: {
+                                id: 'b00b9fac8dc74dae9214bc9d96ee6d32'
+                                key: {
+                                    name: 'x_1526023_lost_and.staff'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: 'e8af642b69d54c0fab7db7fa9c70870f'
                         key: {
@@ -3704,6 +4284,24 @@ declare global {
                                 id: '99f3114296944914992c6ba51250f687'
                                 key: {
                                     name: 'x_1526023_lost_and.lost_found_admin'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        table: 'sys_user_role_contains'
+                        id: 'ea22a10e1a8e4d92b1c13a58ca1ba4ef'
+                        key: {
+                            role: {
+                                id: '99f3114296944914992c6ba51250f687'
+                                key: {
+                                    name: 'x_1526023_lost_and.lost_found_admin'
+                                }
+                            }
+                            contains: {
+                                id: 'b00b9fac8dc74dae9214bc9d96ee6d32'
+                                key: {
+                                    name: 'x_1526023_lost_and.staff'
                                 }
                             }
                         }
@@ -3830,11 +4428,37 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: 'f3197993cd014211bec774f714d6d27d'
+                        key: {
+                            sys_security_acl: 'af17440f07544820b2d44c830ec5de2f'
+                            sys_user_role: {
+                                id: 'b00b9fac8dc74dae9214bc9d96ee6d32'
+                                key: {
+                                    name: 'x_1526023_lost_and.staff'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: 'f49f494c71d54f57b881486cfa7c7e21'
                         key: {
                             name: 'x_1526023_lost_and_lost_item'
                             element: 'last_seen_date'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: 'f54505c632bf4a12a13852acef708fc7'
+                        key: {
+                            sys_security_acl: 'd374a438c2be4ff7827b7b760fce4f38'
+                            sys_user_role: {
+                                id: 'b00b9fac8dc74dae9214bc9d96ee6d32'
+                                key: {
+                                    name: 'x_1526023_lost_and.staff'
+                                }
+                            }
                         }
                     },
                     {
@@ -3882,6 +4506,19 @@ declare global {
                             }
                             element: '.end_split'
                             position: '8'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: 'fbfbebdb69a74405988e1e5a8378fd48'
+                        key: {
+                            sys_security_acl: '89289624046f43c794d05efaf81b12bb'
+                            sys_user_role: {
+                                id: '45e4189030404e1e9bf1015ebdb1eb57'
+                                key: {
+                                    name: 'x_1526023_lost_and.admin'
+                                }
+                            }
                         }
                     },
                     {
