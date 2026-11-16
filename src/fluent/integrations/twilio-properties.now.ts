@@ -90,3 +90,14 @@ export const propOpenWaEnabled = Property({
     value: true,
     description: 'Enable or disable automated Open-WA WhatsApp notifications',
 })
+
+/**
+ * Campus Desk WhatsApp Phone Number for Click-to-Chat
+ */
+export const propDeskPhoneNumber = Property({
+    $id: Now.ID['prop_desk_phone_number'],
+    name: 'x_1526023_lost_and.desk_phone_number',
+    type: 'string',
+    value: '919493698980',
+    description: 'Campus Lost and Found Desk WhatsApp Phone Number (international digits only, e.g. 919493698980)',
+})

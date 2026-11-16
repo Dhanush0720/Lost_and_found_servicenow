@@ -119,7 +119,7 @@ api.controller = function ($scope, spUtil, $window) {
 
     // WhatsApp integration
     c.openWhatsApp = function (topic) {
-        var deskPhoneNumber = '19362260219';
+        var deskPhoneNumber = (c.data && c.data.deskPhoneNumber) ? c.data.deskPhoneNumber : '919493698980';
 
         var msg = "Hi Campus Lost & Found Desk,\n";
         if (topic === 'found') {

@@ -273,6 +273,10 @@ declare global {
                         table: 'sp_portal'
                         id: 'a0b279e90e6141cf96179710679ea450'
                     }
+                    prop_desk_phone_number: {
+                        table: 'sys_properties'
+                        id: 'feefb315d25c451fa4f7555e854964ad'
+                    }
                     prop_openwa_api_key: {
                         table: 'sys_properties'
                         id: '65622819397b48f6a2b30c034fcfd1e7'

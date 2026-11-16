@@ -4,6 +4,7 @@
     data.userId = gs.getUserID();
     data.userName = gs.getUserDisplayName();
     data.isAdmin = gs.hasRole('x_1526023_lost_and.lost_found_admin') || gs.hasRole('admin');
+    data.deskPhoneNumber = gs.getProperty('x_1526023_lost_and.desk_phone_number', '919493698980');
 
     // Handle Actions from Client
     if (input) {
