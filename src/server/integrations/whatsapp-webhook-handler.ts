@@ -1,5 +1,56 @@
 import { gs, GlideRecord } from '@servicenow/glide'
-import { sendWhatsAppMessage } from './twilio-service'
+import { RESTMessageV2 } from '@servicenow/glide/sn_ws'
+
+/**
+ * Sends automated WhatsApp reply via Open-WA or Twilio
+ */
+function sendWhatsAppReply(toPhone: string, messageBody: string): boolean {
+    try {
+        var provider = gs.getProperty('x_1526023_lost_and.whatsapp.provider', 'openwa').toLowerCase()
+        if (provider === 'twilio') {
+            var accountSid = gs.getProperty('x_1526023_lost_and.twilio.account_sid', '')
+            var authToken = gs.getProperty('x_1526023_lost_and.twilio.auth_token', '')
+            var fromNumber = gs.getProperty('x_1526023_lost_and.twilio.from_number', 'whatsapp:+19362260219')
+            if (!accountSid || !authToken) return false
+
+            var formattedTo = toPhone.trim()
+            if (!formattedTo.startsWith('whatsapp:')) {
+                if (!formattedTo.startsWith('+')) formattedTo = '+' + formattedTo
+                formattedTo = 'whatsapp:' + formattedTo
+            }
+
+            var endpoint = 'https://api.twilio.com/2010-04-01/Accounts/' + accountSid + '/Messages.json'
+            var request = new RESTMessageV2()
+            request.setEndpoint(endpoint)
+            request.setHttpMethod('POST')
+            request.setBasicAuth(accountSid, authToken)
+            request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+            var payload = 'To=' + encodeURIComponent(formattedTo) + '&From=' + encodeURIComponent(fromNumber) + '&Body=' + encodeURIComponent(messageBody)
+            request.setRequestBody(payload)
+            request.execute()
+            return true
+        } else {
+            // Open-WA
+            var apiUrl = gs.getProperty('x_1526023_lost_and.openwa.api_url', 'http://localhost:8080').trim()
+            if (apiUrl.endsWith('/')) apiUrl = apiUrl.slice(0, -1)
+            var apiKey = gs.getProperty('x_1526023_lost_and.openwa.api_key', '')
+            var cleanNumber = toPhone.replace(/[^0-9]/g, '')
+            if (!cleanNumber) return false
+
+            var req = new RESTMessageV2()
+            req.setEndpoint(apiUrl + '/sendText')
+            req.setHttpMethod('POST')
+            req.setRequestHeader('Content-Type', 'application/json')
+            if (apiKey) req.setRequestHeader('api_key', apiKey)
+            req.setRequestBody(JSON.stringify({ to: cleanNumber + '@c.us', content: messageBody }))
+            req.execute()
+            return true
+        }
+    } catch (e: any) {
+        gs.error('Error sending WhatsApp reply: ' + e.message)
+        return false
+    }
+}
 
 /**
  * Handles incoming WhatsApp webhook messages from Open-WA or Twilio.
@@ -105,7 +156,7 @@ export function handleWhatsAppInbound(request: any, response: any): void {
 
             // Send confirmation auto-reply
             if (senderPhone) {
-                sendWhatsAppMessage(
+                sendWhatsAppReply(
                     senderPhone,
                     'Hello ' + senderName + ', your lost property report has been recorded as ' + createdNumber + '. Our matching engine is active and will alert you if a matching item is handed in.'
                 )
@@ -134,7 +185,7 @@ export function handleWhatsAppInbound(request: any, response: any): void {
 
             // Send confirmation auto-reply
             if (senderPhone) {
-                sendWhatsAppMessage(
+                sendWhatsAppReply(
                     senderPhone,
                     'Hello ' + senderName + ', thank you for turning this in! Your found report has been recorded in desk custody as ' + createdNumber + '.'
                 )
