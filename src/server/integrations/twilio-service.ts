@@ -43,7 +43,7 @@ function sendViaOpenWa(toPhone: string, messageBody: string): boolean {
         }
         var toRecipient = cleanNumber + '@c.us'
 
-        var endpoint = apiUrl + '/sendText'
+        var endpoint = apiUrl + '/api/messages/sendText'
 
         var request = new RESTMessageV2()
         request.setEndpoint(endpoint)
@@ -63,6 +63,19 @@ function sendViaOpenWa(toPhone: string, messageBody: string): boolean {
         var response = request.execute()
         var statusCode = response.getStatusCode()
         var responseBody = response.getBody()
+
+        // Fallback to legacy /sendText if 404
+        if (statusCode === 404) {
+            var legacyReq = new RESTMessageV2()
+            legacyReq.setEndpoint(apiUrl + '/sendText')
+            legacyReq.setHttpMethod('POST')
+            legacyReq.setRequestHeader('Content-Type', 'application/json')
+            if (apiKey) legacyReq.setRequestHeader('api_key', apiKey)
+            legacyReq.setRequestBody(JSON.stringify(bodyObj))
+            response = legacyReq.execute()
+            statusCode = response.getStatusCode()
+            responseBody = response.getBody()
+        }
 
         if (statusCode >= 200 && statusCode < 300) {
             gs.info('Open-WA message sent successfully to ' + toRecipient)

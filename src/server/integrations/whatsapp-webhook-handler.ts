@@ -38,12 +38,21 @@ function sendWhatsAppReply(toPhone: string, messageBody: string): boolean {
             if (!cleanNumber) return false
 
             var req = new RESTMessageV2()
-            req.setEndpoint(apiUrl + '/sendText')
+            req.setEndpoint(apiUrl + '/api/messages/sendText')
             req.setHttpMethod('POST')
             req.setRequestHeader('Content-Type', 'application/json')
             if (apiKey) req.setRequestHeader('api_key', apiKey)
             req.setRequestBody(JSON.stringify({ to: cleanNumber + '@c.us', content: messageBody }))
-            req.execute()
+            var resp = req.execute()
+            if (resp.getStatusCode() === 404) {
+                var legacyReq = new RESTMessageV2()
+                legacyReq.setEndpoint(apiUrl + '/sendText')
+                legacyReq.setHttpMethod('POST')
+                legacyReq.setRequestHeader('Content-Type', 'application/json')
+                if (apiKey) legacyReq.setRequestHeader('api_key', apiKey)
+                legacyReq.setRequestBody(JSON.stringify({ to: cleanNumber + '@c.us', content: messageBody }))
+                legacyReq.execute()
+            }
             return true
         }
     } catch (e: any) {
