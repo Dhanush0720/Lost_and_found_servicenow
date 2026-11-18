@@ -118,11 +118,17 @@ export function handleWhatsAppInbound(request: any, response: any): void {
 
         var lowerText = messageText.toLowerCase()
 
+        // Strip "lost & found" in greeting so it doesn't trigger false positive
+        var bodyWithoutGreeting = lowerText.replace(/lost\s*(&|and)\s*found\s*(desk)?/gi, '')
+
         // Detect whether the user lost an item or found an item
-        var isLost = lowerText.indexOf('lost') !== -1 ||
-            lowerText.indexOf('missing') !== -1 ||
-            lowerText.indexOf('misplaced') !== -1 ||
-            lowerText.indexOf('forgot') !== -1
+        var isFound = bodyWithoutGreeting.indexOf('found') !== -1 || bodyWithoutGreeting.indexOf('dropped at') !== -1
+        var isLost = !isFound && (
+            bodyWithoutGreeting.indexOf('lost') !== -1 ||
+            bodyWithoutGreeting.indexOf('missing') !== -1 ||
+            bodyWithoutGreeting.indexOf('misplaced') !== -1 ||
+            bodyWithoutGreeting.indexOf('forgot') !== -1
+        )
 
         // Detect Category
         var category = 'other'
